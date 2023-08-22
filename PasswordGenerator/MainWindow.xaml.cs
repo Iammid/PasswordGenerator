@@ -89,37 +89,32 @@ namespace PasswordGenerator
             }
         }
 
-        private bool isCircleToLeft = true;
+        private bool isToggled = false;
 
         private void ToggleLetter_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Button toggleButton = sender as Button;
-            if (toggleButton != null)
+            Ellipse circle = (Ellipse)ToggleLetter.Template.FindName("circle", ToggleLetter);
+
+            // Create a new TranslateTransform for each animation
+            TranslateTransform translateTransform = new TranslateTransform();
+            circle.RenderTransform = translateTransform;
+
+            DoubleAnimation animation = new DoubleAnimation();
+            animation.Duration = TimeSpan.FromSeconds(0.2);
+
+            if (isToggled)
             {
-                Ellipse circle = toggleButton.Template.FindName("circle", toggleButton) as Ellipse;
-                if (circle != null)
-                {
-                    DoubleAnimation animation = new DoubleAnimation
-                    {
-                        Duration = TimeSpan.FromSeconds(0.2)
-                    };
-
-                    if (isCircleToLeft)
-                    {
-                        animation.From = 0;
-                        animation.To = 20;
-                    }
-                    else
-                    {
-                        animation.From = 20;
-                        animation.To = 0;
-                    }
-
-                    isCircleToLeft = !isCircleToLeft; // Toggle the circle's position
-
-                    circle.BeginAnimation(TranslateTransform.XProperty, animation);
-                }
+                animation.To = 0; // Move the circle to the left
             }
+            else
+            {
+                animation.To = ToggleLetter.ActualWidth - circle.ActualWidth - 10; // Move the circle to the right
+            }
+
+            // Apply the animation to the new TranslateTransform's X property
+            translateTransform.BeginAnimation(TranslateTransform.XProperty, animation);
+
+            isToggled = !isToggled;
         }
     }
 }
