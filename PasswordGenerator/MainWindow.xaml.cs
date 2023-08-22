@@ -30,6 +30,14 @@ namespace PasswordGenerator
             GenerateButton_Click(null, null);
             PasswordBox.IsEnabled = false;
 
+            ToggleLetter.PreviewMouseLeftButtonDown += ToggleGrid_PreviewMouseLeftButtonDown;
+            ToggleLetter_Copy.PreviewMouseLeftButtonDown += ToggleGrid_PreviewMouseLeftButtonDown;
+            ToggleLetter.PreviewMouseLeftButtonDown += ToggleGrid_PreviewMouseLeftButtonDown;
+            ToggleLetter_Copy.PreviewMouseLeftButtonDown += ToggleGrid_PreviewMouseLeftButtonDown;
+            ToggleLetter_Copy1.PreviewMouseLeftButtonDown += ToggleGrid_PreviewMouseLeftButtonDown;
+            ToggleLetter_Copy2.PreviewMouseLeftButtonDown += ToggleGrid_PreviewMouseLeftButtonDown;
+            ToggleLetter_Copy3.PreviewMouseLeftButtonDown += ToggleGrid_PreviewMouseLeftButtonDown;
+
         }
 
         private async void GenerateButton_Click(object sender, RoutedEventArgs e)
@@ -37,7 +45,7 @@ namespace PasswordGenerator
 
             using (HttpClient client = new HttpClient())
             {
-                string apiUrl = "https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l=7";
+                string apiUrl = "https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l=8";
 
                 HttpResponseMessage response = await client.GetAsync(apiUrl);
 
@@ -89,32 +97,49 @@ namespace PasswordGenerator
             }
         }
 
+        private void ToggleGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                Ellipse circle = button.Template.FindName("circle", button) as Ellipse;
+
+                if (circle != null)
+                {
+                    double toPosition;
+
+                    if (isToggled)
+                    {
+                        toPosition = 0; // Move the circle to the left
+                    }
+                    else
+                    {
+                        toPosition = button.ActualWidth - circle.ActualWidth - 10; // Move the circle to the right
+                    }
+
+                    AnimateCircle(circle, toPosition);
+                }
+            }
+        }
+
         private bool isToggled = false;
 
-        private void ToggleLetter_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void AnimateCircle(Ellipse circle, double toPosition)
         {
-            Ellipse circle = (Ellipse)ToggleLetter.Template.FindName("circle", ToggleLetter);
-
-            // Create a new TranslateTransform for each animation
             TranslateTransform translateTransform = new TranslateTransform();
             circle.RenderTransform = translateTransform;
 
             DoubleAnimation animation = new DoubleAnimation();
             animation.Duration = TimeSpan.FromSeconds(0.2);
 
-            if (isToggled)
-            {
-                animation.To = 0; // Move the circle to the left
-            }
-            else
-            {
-                animation.To = ToggleLetter.ActualWidth - circle.ActualWidth - 10; // Move the circle to the right
-            }
+            double fromPosition = translateTransform.X;
 
-            // Apply the animation to the new TranslateTransform's X property
+            animation.From = fromPosition;
+            animation.To = toPosition;
+
             translateTransform.BeginAnimation(TranslateTransform.XProperty, animation);
 
             isToggled = !isToggled;
         }
+
     }
 }
