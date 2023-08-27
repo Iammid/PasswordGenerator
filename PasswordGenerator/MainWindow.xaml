@@ -25,6 +25,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="1"/>
             <Setter Property="Background" Value="#c4006c"/>
+            <Setter Property="Tag" Value="LeftAligned"/>
             <!-- Change the background color here -->
             <Setter Property="Template">
                 <Setter.Value>
@@ -53,24 +54,60 @@
             </Setter>
         </Style>
 
+        <Style x:Key="RoundCorner-Right" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Background" Value="#c4006c"/>
+            <Setter Property="Tag" Value="RightAligned"/>
+            <!-- Change the background color here -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="12" BorderBrush="#424242" BorderThickness="2" Background="#f7f7f7">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontWeight="Bold"/>
+                            </Border>
+                            <Ellipse x:Name="circle" Width="16" Height="16" Fill="Black" HorizontalAlignment="Right" Margin="5"
+                             >
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform X="0"/>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" TargetName="border" Value="#c4006c"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
 
     <Grid x:Name="Password_Generator" HorizontalAlignment="Center" Width="320" Margin="0,0,0,-68">
-        <TextBox x:Name="PasswordBox" HorizontalAlignment="Center" Margin="0,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="279" Height="47" FontSize="22" Background="#f7f7f7" BorderBrush="{x:Null}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-            <TextBox.Style>
-                <Style TargetType="TextBox">
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="TextBox">
-                                <Border BorderThickness="2" BorderBrush="#B0B0B0" CornerRadius="10">
-                                    <ScrollViewer x:Name="PART_ContentHost"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </TextBox.Style>
-        </TextBox>
+        <Grid PreviewMouseLeftButtonDown="TextBoxGrid_PreviewMouseLeftButtonDown">
+            <TextBox x:Name="PasswordBox" HorizontalAlignment="Center" Margin="0,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="279" Height="47" FontSize="22" Background="#f7f7f7" BorderBrush="{x:Null}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                <TextBox.Style>
+                    <Style TargetType="TextBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="TextBox">
+                                    <Border BorderThickness="2" BorderBrush="#B0B0B0" CornerRadius="10">
+                                        <ScrollViewer x:Name="PART_ContentHost"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TextBox.Style>
+            </TextBox>
+        </Grid>
         <Button x:Name="GenerateButton" Content="GENERATE" HorizontalAlignment="Center" Margin="0,415,0,0" VerticalAlignment="Top" Click="GenerateButton_Click" Height="47" Width="280" FontSize="18" FontFamily="Aspira" BorderThickness="2">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
@@ -117,26 +154,26 @@
             </Button.FocusVisualStyle>
         </Button>
         <Label x:Name="PGName_Copy" Content="Include Numbers" HorizontalAlignment="Center" Margin="0,154,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Aspira" FontWeight="Normal" Foreground="#FF424242" Width="280" Height="45" VerticalContentAlignment="Center" />
-        <Slider HorizontalAlignment="Left" Margin="54,122,0,0" VerticalAlignment="Top" Width="246" Background="{x:Null}" BorderBrush="White" Foreground="{x:Null}"/>
-        <Button x:Name="IncludeNumbers" Loaded="IncludeNumbers_Loaded" Style="{DynamicResource RoundCorner}" 
+        <Slider x:Name="mySlider" HorizontalAlignment="Left" Margin="54,122,0,0" VerticalAlignment="Top" Width="246" Background="{x:Null}" BorderBrush="White" Foreground="{x:Null}" Minimum="1" Maximum="16" Value="8" TickPlacement="BottomRight" TickFrequency="1"/>
+        <Button x:Name="IncludeNumbers" Loaded="IncludeNumbers_Loaded" Style="{DynamicResource RoundCorner-Right}" 
         Height="27" 
         VerticalAlignment="Top" 
         Content="" 
-        Margin="247,163,29,0" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" />
+        Margin="247,163,29,0" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" Tag="RightAligned"/>
         <Label x:Name="PGName_Copy1" Content="Include Symbols" HorizontalAlignment="Center" Margin="0,204,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Aspira" FontWeight="Normal" Foreground="#FF424242" Width="280" Height="45" VerticalContentAlignment="Center" />
         <Button x:Name="IncludeSymbols" Loaded="IncludeSymbols_Loaded" Style="{DynamicResource RoundCorner}" 
             Height="27" 
             VerticalAlignment="Top" 
             Content="" 
-            Margin="247,213,29,0" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" />
+            Margin="247,213,29,0" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" Tag="LeftAligned"/>
         <Label x:Name="PGName_Copy2" Content="Include Lowercase" HorizontalAlignment="Center" Margin="0,254,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Aspira" FontWeight="Normal" Foreground="#FF424242" Width="280" Height="45" VerticalContentAlignment="Center" />
         <Label x:Name="PGName_Copy3" Content="Include Uppercase" HorizontalAlignment="Center" Margin="0,304,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Aspira" FontWeight="Normal" Foreground="#FF424242" Width="280" Height="45" VerticalContentAlignment="Center" />
-        <Button x:Name="IncludeLowercase" Loaded="IncludeLowercase_Loaded" Style="{DynamicResource RoundCorner}" 
+        <Button x:Name="IncludeLowercase" Loaded="IncludeLowercase_Loaded" Style="{DynamicResource RoundCorner-Right}" 
             Height="27" 
             VerticalAlignment="Top" 
             Content="" 
             Margin="247,263,29,0" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" />
-        <Button x:Name="IncludeUppercase" Loaded="IncludeUppercase_Loaded" Style="{DynamicResource RoundCorner}" 
+        <Button x:Name="IncludeUppercase" Loaded="IncludeUppercase_Loaded" Style="{DynamicResource RoundCorner-Right}" 
             Height="27" 
             VerticalAlignment="Top" 
             Content="" 
@@ -147,6 +184,6 @@
             VerticalAlignment="Top" 
             Content="" 
             Margin="247,363,29,0" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" />
-        <Label Content="8" HorizontalAlignment="Left" Margin="20,115,0,0" VerticalAlignment="Top" FontFamily="Aspira" FontWeight="Bold" FontSize="18"/>
+        <Label x:Name="sliderValueLabel" Content="{Binding ElementName=mySlider, Path=Value}" HorizontalAlignment="Left" Margin="20,115,0,0" VerticalAlignment="Top" FontFamily="Aspira" FontWeight="Bold" FontSize="18"/>
     </Grid>
 </Window>
