@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PasswordGenerator"
         mc:Ignorable="d"
-        Title="Password Generator" Height="516" Width="320" Icon="/locked-computer.png">
+        Title="Password Generator" Height="476" Width="320" Icon="/locked-computer.png">
 
     <Window.Resources>
         <Style x:Key="CustomToolTipStyle" TargetType="ToolTip">
@@ -91,7 +91,7 @@
     </Window.Resources>
 
     <Grid x:Name="Password_Generator" HorizontalAlignment="Center" Width="320" Margin="0,0,0,-68">
-        <Grid PreviewMouseLeftButtonDown="TextBoxGrid_PreviewMouseLeftButtonDown">
+        <Grid PreviewMouseLeftButtonDown="TextBoxGrid_PreviewMouseLeftButtonDown" Margin="0,0,0,10">
             <TextBox x:Name="PasswordBox" HorizontalAlignment="Center" Margin="0,54,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="279" Height="47" FontSize="22" Background="#f7f7f7" BorderBrush="{x:Null}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
                 <TextBox.Style>
                     <Style TargetType="TextBox">
@@ -108,7 +108,7 @@
                 </TextBox.Style>
             </TextBox>
         </Grid>
-        <Button x:Name="GenerateButton" Content="GENERATE" HorizontalAlignment="Center" Margin="0,415,0,0" VerticalAlignment="Top" Click="GenerateButton_Click" Height="47" Width="280" FontSize="18" FontFamily="Aspira" BorderThickness="2">
+        <Button x:Name="GenerateButton" Content="GENERATE" HorizontalAlignment="Center" Margin="0,368,0,0" VerticalAlignment="Top" Click="GenerateButton_Click" Height="48" Width="280" FontSize="18" FontFamily="Aspira" BorderThickness="2">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Grid>
@@ -178,12 +178,6 @@
             VerticalAlignment="Top" 
             Content="" 
             Margin="247,313,29,0" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" />
-        <Label x:Name="PGName_Copy4" Content="Include Words" HorizontalAlignment="Center" Margin="0,354,0,0" VerticalAlignment="Top" FontSize="18" FontFamily="Aspira" FontWeight="Normal" Foreground="#FF424242" Width="280" Height="45" VerticalContentAlignment="Center" />
-        <Button x:Name="IncludeWords" Loaded="IncludeWords_Loaded" Style="{DynamicResource RoundCorner}" 
-            Height="27" 
-            VerticalAlignment="Top" 
-            Content="" 
-            Margin="247,363,29,0" Background="White" BorderBrush="{x:Null}" Foreground="{x:Null}" />
         <Label x:Name="sliderValueLabel" Content="{Binding ElementName=mySlider, Path=Value}" HorizontalAlignment="Left" Margin="20,115,0,0" VerticalAlignment="Top" FontFamily="Aspira" FontWeight="Bold" FontSize="18"/>
     </Grid>
 </Window>

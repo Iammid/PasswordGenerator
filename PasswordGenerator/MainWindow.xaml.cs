@@ -27,7 +27,7 @@ namespace PasswordGenerator
         {
             InitializeComponent();
 
-            GeneratePassword(0); // Generates the initial password // Generates the password when running the program on the first try
+            GeneratePassword(8); // Generates the initial password // Generates the password when running the program on the first try
             PasswordBox.IsEnabled = false; // Does disable the option that the user edits the password inbox or add additional characters
 
             // Attach event handler to the slider's ValueChanged event
@@ -159,14 +159,6 @@ namespace PasswordGenerator
         }
 
         private void IncludeUppercase_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button)
-            {
-                button.PreviewMouseLeftButtonDown += ToggleGrid_PreviewMouseLeftButtonDown;
-            }
-        }
-
-        private void IncludeWords_Loaded(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
             {
@@ -331,190 +323,181 @@ namespace PasswordGenerator
                     double lowercaseCurrentX;
                     double uppercaseCurrentX;
 
-                    if (buttonStates.TryGetValue(IncludeNumbers.Name, out var numbersState))
+                    if (buttonStates.TryGetValue(IncludeNumbers.Name, out var numbersState) && buttonStates.TryGetValue(IncludeSymbols.Name, out var symbolsstate) && buttonStates.TryGetValue(IncludeLowercase.Name, out var lowercasestate) && buttonStates.TryGetValue(IncludeUppercase.Name, out var uppercasestate))
                     {
                         numbersCurrentX = numbersState.Item1;
+                        symbolsCurrentX = symbolsstate.Item1;
+                        lowercaseCurrentX = lowercasestate.Item1;
+                        uppercaseCurrentX = uppercasestate.Item1;
 
-                        if (buttonStates.TryGetValue(IncludeSymbols.Name, out var symbolsstate))
+                        if (numbersCurrentX == -18 && symbolsCurrentX == 0 && lowercaseCurrentX == -18 && uppercaseCurrentX == -18) // Include Numbers (active), Include Symbols (active), Include Lowercase (active), Include Uppercase (active)
                         {
-                            symbolsCurrentX = symbolsstate.Item1;
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
+                        }
+                        else if (numbersCurrentX == -18 && symbolsCurrentX == 0 && lowercaseCurrentX == -18 && uppercaseCurrentX == 0) // Include Numbers (active), Include Symbols (active), Include Lowercase (active), Include Uppercase (inactive)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
+                            lowercasetrue = true;
+                        }
+                        else if (numbersCurrentX == -18 && symbolsCurrentX == 0 && lowercaseCurrentX == 0 && uppercaseCurrentX == -18) // Include Numbers (active), Include Symbols (active), Include Lowercase (inactive), Include Uppercase (active)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
+                            uppercasetrue = true;
+                        }
+                        else if (numbersCurrentX == -18 && symbolsCurrentX == 0 && lowercaseCurrentX == 0 && uppercaseCurrentX == 0) // Include Numbers (active), Include Symbols (active), Include Lowercase (inactive), Include Uppercase (inactive)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
+                            lowercaseuppercasefalse = true;
+                        }
+                        else if (numbersCurrentX == -18 && symbolsCurrentX == 18 && lowercaseCurrentX == -18 && uppercaseCurrentX == -18) // Include Numbers (active), Include Symbols (inactive), Include Lowercase (active), Include Uppercase (active)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
+                        }
+                        else if (numbersCurrentX == -18 && symbolsCurrentX == 18 && lowercaseCurrentX == 0 && uppercaseCurrentX == -18) // Include Numbers (active), Include Symbols (inactive), Include Lowercase (inactive), Include Uppercase (active)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
+                            uppercasetrue = true;
+                        }
+                        else if (numbersCurrentX == -18 && symbolsCurrentX == 18 && lowercaseCurrentX == -18 && uppercaseCurrentX == 0) // Include Numbers (active), Include Symbols (inactive), Include Lowercase (active), Include Uppercase (inactive)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
+                            lowercasetrue = true;
+                        }
+                        else if (numbersCurrentX == -18 && symbolsCurrentX == 18 && lowercaseCurrentX == 0 && lowercaseCurrentX == 0) // Include Numbers (active), Include Symbols (inactive), Include Lowercase (inactive), Include Uppercase (inactive)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/pin/plain?c=1&l={passwordLength}";
+                        }
+                        else if (numbersCurrentX == 0 && symbolsCurrentX == 18 && lowercaseCurrentX == -18 && uppercaseCurrentX == -18) // Include Numbers (inactive), Include Symbols (inactive), Include Lowercase (active), Include Uppercase (active) 
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
+                            nonumbers = true;
+                        }
+                        else if (numbersCurrentX == 0 && symbolsCurrentX == 18 && lowercaseCurrentX == -18 && uppercaseCurrentX == 0) // Include Numbers (inactive), Include Symbols (inactive), Include Lowercase (active), Include Uppercase (inactive)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
+                            nonumbers = true;
+                            lowercasetrue = true;
+                        }
+                        else if (numbersCurrentX == 0 && symbolsCurrentX == 18 && lowercaseCurrentX == 0 && uppercaseCurrentX == -18) // Include Numbers (inactive), Include Symbols (inactive), Include Lowercase (inactive), Include Uppercase (active)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
+                            nonumbers = true;
+                            uppercasetrue = true;
+                        }
+                        else if (numbersCurrentX == 0 && symbolsCurrentX == 18 && lowercaseCurrentX == 0 && uppercaseCurrentX == 0) // Include Numbers (inactive), Include Symbols (inactive), Include Lowercase (inactive), Include Uppercase (inactive)
+                        {
+                            MessageBox.Show("Password cannot be generated without parameters!");
+                        }
+                        else if (numbersCurrentX == 0 && symbolsCurrentX == 0 && lowercaseCurrentX == -18 && uppercaseCurrentX == -18) // Include Numbers (inactive), Include Symbols (active), Include Lowercase (active), Include Uppercase (active)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
+                            nonumbers = true;
+                        }
+                        else if (numbersCurrentX == 0 && symbolsCurrentX == 0 && lowercaseCurrentX == -18 && uppercaseCurrentX == 0) // Include Numbers (inactive), Include Symbols (active), Include Lowercase (active), Include Uppercase (inactive)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
+                            nonumbers = true;
+                            lowercasetrue = true;
+                        }
+                        else if (numbersCurrentX == 0 && symbolsCurrentX == 0 && lowercaseCurrentX == 0 && uppercaseCurrentX == -18) // Include Numbers (inactive), Include Symbols (active), Include Lowercase (inactive), Include Uppercase (active)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
+                            nonumbers = true;
+                            uppercasetrue = true;
+                        }
+                        else if (numbersCurrentX == 0 && symbolsCurrentX == 0 && lowercaseCurrentX == 0 && uppercaseCurrentX == 0) // Include Numbers (inactive), Include Symbols (active), Include Lowercase (inactive), Include Uppercase (inactive)
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/unicode/plain?c=1&l={passwordLength}";
+                        }
+                        else
+                        {
+                            apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
+                        }
 
-                            if (buttonStates.TryGetValue(IncludeLowercase.Name, out var lowercasestate))
+                        if (!string.IsNullOrEmpty(apiUrl))
+                        {
+                            HttpResponseMessage response = await client.GetAsync(apiUrl);
+
+                            if (response.IsSuccessStatusCode)
                             {
-                                lowercaseCurrentX = lowercasestate.Item1;
+                                string responseBody = await response.Content.ReadAsStringAsync();
+                                string trimmedPassword = responseBody.Trim();
 
-                                if (buttonStates.TryGetValue(IncludeUppercase.Name, out var uppercasestate))
+                                if (lowercaseuppercasefalse)
                                 {
-                                    uppercaseCurrentX = uppercasestate.Item1;
+                                    // Define a mapping from letters to numbers
+                                    string mapping = "abcdefghijklmnopqrstuvwxyz";
 
-                                    if (numbersCurrentX == -18 && symbolsCurrentX == 0 && lowercaseCurrentX == -18 && uppercaseCurrentX == -18) // Include Numbers (active), Include Symbols (active), Include Lowercase (active), Include Uppercase (active)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
-                                    }
-                                    else if (numbersCurrentX == -18 && symbolsCurrentX == 0 && lowercaseCurrentX == -18 && uppercaseCurrentX == 0) // Include Numbers (active), Include Symbols (active), Include Lowercase (active), Include Uppercase (inactive)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
-                                        lowercasetrue = true;
-                                    }
-                                    else if (numbersCurrentX == -18 && symbolsCurrentX == 0 && lowercaseCurrentX == 0 && uppercaseCurrentX == -18) // Include Numbers (active), Include Symbols (active), Include Lowercase (inactive), Include Uppercase (active)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
-                                        uppercasetrue = true;
-                                    }
-                                    else if (numbersCurrentX == -18 && symbolsCurrentX == 0 && lowercaseCurrentX == 0 && uppercaseCurrentX == 0) // Include Numbers (active), Include Symbols (active), Include Lowercase (inactive), Include Uppercase (inactive)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
-                                        lowercaseuppercasefalse = true;
-                                    }
-                                    else if (numbersCurrentX == -18 && symbolsCurrentX == 18 && lowercaseCurrentX == -18 && uppercaseCurrentX == -18) // Include Numbers (active), Include Symbols (inactive), Include Lowercase (active), Include Uppercase (active)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
-                                    }
-                                    else if (numbersCurrentX == -18 && symbolsCurrentX == 18 && lowercaseCurrentX == 0 && uppercaseCurrentX == -18) // Include Numbers (active), Include Symbols (inactive), Include Lowercase (inactive), Include Uppercase (active)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
-                                        uppercasetrue = true;
-                                    }
-                                    else if (numbersCurrentX == -18 && symbolsCurrentX == 18 && lowercaseCurrentX == -18 && uppercaseCurrentX == 0) // Include Numbers (active), Include Symbols (inactive), Include Lowercase (active), Include Uppercase (inactive)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
-                                        lowercasetrue = true;
-                                    }
-                                    else if (numbersCurrentX == -18 && symbolsCurrentX == 18 && lowercaseCurrentX == 0 && lowercaseCurrentX == 0) // Include Numbers (active), Include Symbols (inactive), Include Lowercase (inactive), Include Uppercase (inactive)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
-                                        lowercaseuppercasefalse = true;
-                                    }
-                                    else if (numbersCurrentX == 0 && symbolsCurrentX == 18 && lowercaseCurrentX == -18 && uppercaseCurrentX == -18) // Include Numbers (inactive), Include Symbols (inactive), Include Lowercase (active), Include Uppercase (active) 
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
-                                        nonumbers = true;
-                                    }
-                                    else if (numbersCurrentX == 0 && symbolsCurrentX == 18 && lowercaseCurrentX == -18 && uppercaseCurrentX == 0) // Include Numbers (inactive), Include Symbols (inactive), Include Lowercase (active), Include Uppercase (inactive)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
-                                        nonumbers = true;
-                                        lowercasetrue = true;
-                                    }
-                                    else if (numbersCurrentX == 0 && symbolsCurrentX == 18 && lowercaseCurrentX == 0 && uppercaseCurrentX == -18) // Include Numbers (inactive), Include Symbols (inactive), Include Lowercase (inactive), Include Uppercase (active)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
-                                        nonumbers = true;
-                                        uppercasetrue = true;
-                                    }
-                                    else if (numbersCurrentX == 0 && symbolsCurrentX == 18 && lowercaseCurrentX == 0 && uppercaseCurrentX == 0) // Include Numbers (inactive), Include Symbols (inactive), Include Lowercase (inactive), Include Uppercase (inactive)
-                                    {
-                                        MessageBox.Show("Password cannot be generated without parameters!");
-                                    }
-                                    else if (numbersCurrentX == 0 && symbolsCurrentX == 0 && lowercaseCurrentX == -18 && uppercaseCurrentX == -18) // Include Numbers (inactive), Include Symbols (active), Include Lowercase (active), Include Uppercase (active)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
-                                        nonumbers = true;
-                                    }
-                                    else if (numbersCurrentX == 0 && symbolsCurrentX == 0 && lowercaseCurrentX == -18 && uppercaseCurrentX == 0) // Include Numbers (inactive), Include Symbols (active), Include Lowercase (active), Include Uppercase (inactive)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
-                                        nonumbers = true;
-                                        lowercasetrue = true;
-                                    }
-                                    else if (numbersCurrentX == 0 && symbolsCurrentX == 0 && lowercaseCurrentX == 0 && uppercaseCurrentX == -18) // Include Numbers (inactive), Include Symbols (active), Include Lowercase (inactive), Include Uppercase (active)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}&sym=true";
-                                        nonumbers = true;
-                                        uppercasetrue = true;
-                                    }
-                                    else if (numbersCurrentX == 0 && symbolsCurrentX ==  0 && lowercaseCurrentX == 0 && uppercaseCurrentX == 0) // Include Numbers (inactive), Include Symbols (active), Include Lowercase (inactive), Include Uppercase (inactive)
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/unicode/plain?c=1&l={passwordLength}";
-                                    }
-                                    else
-                                    {
-                                        apiUrl = $"https://makemeapassword.ligos.net/api/v1/alphanumeric/plain?c=1&l={passwordLength}";
-                                    }
+                                    StringBuilder numericPasswordBuilder = new StringBuilder();
 
-                                    if (!string.IsNullOrEmpty(apiUrl))
+                                    // Convert the trimmedPassword characters to numbers based on the mapping
+                                    foreach (char c in trimmedPassword)
                                     {
-                                        HttpResponseMessage response = await client.GetAsync(apiUrl);
-
-                                        if (response.IsSuccessStatusCode)
+                                        if (char.IsLetter(c))
                                         {
-                                            string responseBody = await response.Content.ReadAsStringAsync();
-                                            string trimmedPassword = responseBody.Trim();
-
-                                            if (lowercaseuppercasefalse)
+                                            char lowercaseChar = char.ToLower(c);
+                                            int index = mapping.IndexOf(lowercaseChar);
+                                            if (index >= 0)
                                             {
-                                                // Define a mapping from letters to numbers
-                                                string mapping = "abcdefghijklmnopqrstuvwxyz";
-
-                                                // Convert the trimmedPassword characters to numbers based on the mapping
-                                                string numericPassword = "";
-                                                foreach (char c in trimmedPassword)
-                                                {
-                                                    if (char.IsLetter(c))
-                                                    {
-                                                        int index = mapping.IndexOf(char.ToLower(c));
-                                                        if (index >= 0)
-                                                        {
-                                                            numericPassword += index.ToString();
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        numericPassword += c;
-                                                    }
-                                                }
-
-                                                trimmedPassword = numericPassword;
+                                                // Replace letters with random digits between 0 and 9
+                                                int randomDigit = new Random().Next(10);
+                                                numericPasswordBuilder.Append(randomDigit);
                                             }
-                                            if (nonumbers)
-                                            {
-                                                // Define a mapping from numbers to letters
-                                                string mapping = "abcdefghijklmnopqrstuvwxyz";
-
-                                                // Convert the numericPassword characters to letters based on the mapping
-                                                string transformedPassword = "";
-                                                foreach (char c in trimmedPassword)
-                                                {
-                                                    if (char.IsDigit(c))
-                                                    {
-                                                        int index = int.Parse(c.ToString());
-                                                        if (index >= 0 && index < mapping.Length)
-                                                        {
-                                                            transformedPassword += mapping[index];
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        transformedPassword += c;
-                                                    }
-                                                }
-
-                                                trimmedPassword = transformedPassword;
-                                            }
-                                            if (lowercasetrue)
-                                            {
-                                                trimmedPassword.ToLower();
-                                            }
-                                            if (uppercasetrue)
-                                            {
-                                                trimmedPassword.ToUpper();
-                                            }
-                                        PasswordBox.Text = trimmedPassword;
-
                                         }
                                         else
                                         {
-                                            // Handle the case where the API request is not successful
+                                            numericPasswordBuilder.Append(c);
                                         }
                                     }
+
+                                    string numericPassword = numericPasswordBuilder.ToString();
+                                    trimmedPassword = numericPassword;
                                 }
-                                else
+                                if (nonumbers)
                                 {
-                                    MessageBox.Show($"APIurl: {apiUrl.ToString()}");
+                                    // Define a mapping from numbers to letters
+                                    string mapping = "abcdefghijklmnopqrstuvwxyz";
+
+                                    // Convert the numericPassword characters to letters based on the mapping
+                                    string transformedPassword = "";
+                                    foreach (char c in trimmedPassword)
+                                    {
+                                        if (char.IsDigit(c))
+                                        {
+                                            int index = int.Parse(c.ToString());
+                                            if (index >= 0 && index < mapping.Length)
+                                            {
+                                                transformedPassword += mapping[index];
+                                            }
+                                        }
+                                        else
+                                        {
+                                            transformedPassword += c;
+                                        }
+                                    }
+
+                                    trimmedPassword = transformedPassword;
                                 }
+                                if (lowercasetrue)
+                                {
+                                    trimmedPassword = trimmedPassword.ToLower();
+                                }
+                                if (uppercasetrue)
+                                {
+                                    trimmedPassword = trimmedPassword.ToUpper();
+                                }
+                                PasswordBox.Text = trimmedPassword;
+
+                            }
+                            else
+                            {
+                                // Handle the case where the API request is not successful
                             }
                         }
-
+                    }
+                    else
+                    {
+                        //MessageBox.Show($"APIurl: {apiUrl.ToString()}");
                     }
                 }
             }
@@ -526,9 +509,16 @@ namespace PasswordGenerator
             {
                 MessageBox.Show("An error occurred: " + ex.Message);
             }
+
         }
+
     }
+
 }
+
+
+    
+
 
         #endregion
 
